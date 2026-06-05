@@ -487,6 +487,21 @@ const D=[
 ["14.4","14. POC Validation","OTA Full Cycle","P0","PG",null,null,null,"2026-06-08","John/Lixin","SDK support",null],
 ["14.5","14. POC Validation","Stress / Stability","P0","PG",null,null,null,"2026-06-09","John/Lixin","SDK support",null],
 ["14.6","14. POC Validation","POC Acceptance Sign-off","P0","PG",null,null,null,"2026-06-10","John/Lixin","Gate: M5 must close first",null],
+["15.1","15. PM Spec Verify","Analog Latency (Guitar in → HP out)","P0","PG",null,null,null,"2026-06-10","Teo","Spec: < 4.3ms | Actual: ___ms",null],
+["15.2","15. PM Spec Verify","USB Roundtrip Latency","P0","PG",null,null,null,"2026-06-10","Teo","Spec: < 15ms (32 buffer) | Actual: ___ms",null],
+["15.3","15. PM Spec Verify","DSP Only Latency (no USB)","P0","PG",null,null,null,"2026-06-10","Teo","Spec: < 4.3ms | Actual: ___ms",null],
+["15.4","15. PM Spec Verify","Audio Routing — Guitar DSP Path","P0","PG",null,null,null,"2026-06-10","Teo","ADC/I2S in → Guitar DSP → Mix → DAC+I2S out",null],
+["15.5","15. PM Spec Verify","Audio Routing — Music DSP Path","P0","PG",null,null,null,"2026-06-10","Teo","BT/USB in → Music DSP → Mix → DAC+I2S out",null],
+["15.6","15. PM Spec Verify","Audio Routing — Mix Path","P0","PG",null,null,null,"2026-06-10","Teo","Guitar DSP + Music DSP → Mix & DSP → out",null],
+["15.7","15. PM Spec Verify","BT/USB Mutually Exclusive","P0","PG",null,null,null,"2026-06-10","Teo","BT Audio ON → USB Audio disabled, vice versa",null],
+["15.8","15. PM Spec Verify","USB Recording Mode 1","P0","PG",null,null,null,"2026-06-10","Teo","Post-Guitar-DSP capture (not available in BT mode)",null],
+["15.9","15. PM Spec Verify","USB Recording Mode 2","P0","PG",null,null,null,"2026-06-10","Teo","Post-Mix capture (not available in BT mode)",null],
+["15.10","15. PM Spec Verify","I2S out = DAC out (same data)","P0","PG",null,null,null,"2026-06-10","Teo","I2S to poweramp and DAC to HP/line carry identical signal",null],
+["15.11","15. PM Spec Verify","BLE co-exist with Audio","P0","PG",null,null,null,"2026-06-10","Teo","BLE APP connected while Guitar/BT/USB audio active",null],
+["15.12","15. PM Spec Verify","CPU Loading Report","P0","PG",null,null,null,"2026-06-10","Teo","Spark Gen1 DSP full preset | Loading: ___%",null],
+["15.13","15. PM Spec Verify","No Looper","P1","PG",null,null,null,"2026-06-10","Teo","Confirmed not in scope",null],
+["15.14","15. PM Spec Verify","Pedal Control via APP only","P1","PG",null,null,null,"2026-06-10","Teo","Cannot direct connect to Control X",null],
+["15.15","15. PM Spec Verify","No USB MIDI","P1","PG",null,null,null,"2026-06-10","Teo","Confirmed not in scope",null],
 ];
 
 // ── GOOGLE SHEETS SYNC ──
@@ -1252,6 +1267,7 @@ const GANTT_ROWS = [
   ["12. System",        5,  8,  "#0891b2", "5/19",  "PG"],
   ["13. Peripheral",    5,  8,  "#0891b2", "5/19",  "PG"],
   ["14. POC Validation",10, 12, "#7c3aed", "6/10",  "PG (blocked on Airoha 6/5)"],
+  ["15. PM Spec Verify", 10, 12, "#0369a1", "6/10",  "PM POC Spec 驗收"],
 ];
 
 function renderGantt(){
