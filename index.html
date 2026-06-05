@@ -664,9 +664,12 @@ function priB(p){ return p==='P0'?`<span class="bx b-p0">P0</span>`:`<span class
 // ── OWNER ──
 const OW_KEY='muji_ow_v1';
 const OW_OPTS=['PG','Airoha','WLT','PG/Airoha','PG/WLT','Airoha/WLT'];
+// Corrected default owners based on PIC mapping (PG internal: Teo/Lio only)
+const OW_DEFAULTS={"1.1":"Airoha","1.2":"Airoha","1.3":"Airoha","1.4":"Airoha","1.5":"Airoha","1.6":"Airoha","1.7":"Airoha","1.8":"Airoha","1.9":"Airoha","1.10":"Airoha","1.11":"Airoha","2.1":"Airoha","2.2":"Airoha","2.3":"Airoha","2.4":"Airoha","2.5":"Airoha","2.6":"Airoha","2.7":"Airoha","4.1":"Airoha","4.2":"Airoha","4.7":"Airoha","4.8":"Airoha","4.9":"Airoha","4.10":"Airoha","4.11":"Airoha","5.1":"Airoha","5.2":"Airoha","5.3":"Airoha","5.4":"Airoha","5.5":"Airoha","5.6":"Airoha","5.7":"Airoha","5.8":"Airoha","5.9":"Airoha","5.10":"Airoha","5.11":"Airoha","5.12":"Airoha","5.13":"WLT","5.14":"WLT","5.15":"WLT","5.16":"Airoha","5.17":"Airoha","5.18":"Airoha","7.1":"WLT","7.2":"WLT","7.3":"WLT","7.5":"WLT","7.6":"WLT","7.7":"WLT","7.8":"WLT","7.9":"WLT","7.10":"WLT","8.1":"WLT","8.2":"WLT","8.3":"WLT","9.1":"WLT","9.2":"WLT","9.3":"WLT","9.4":"PG/Airoha","9.5":"WLT","9.6":"WLT","9.7":"WLT","9.8":"WLT","9.9":"WLT","10.5":"PG/Airoha","10.6":"PG/Airoha","11.1":"Airoha","11.2":"Airoha","11.3":"Airoha","11.4":"Airoha","11.6":"Airoha","12.1":"Airoha","12.3":"Airoha","12.4":"WLT","13.1":"WLT","13.2":"WLT","13.3":"WLT","13.4":"WLT"};
 function loadOwEdits(){ try{ return JSON.parse(localStorage.getItem(OW_KEY)||'{}'); }catch(e){ return {}; } }
 function getOwVal(id){ const d=loadOwEdits(); return d[id]!==undefined ? d[id] : null; }
 function saveOwVal(id,val){ const d=loadOwEdits(); if(!val) delete d[id]; else d[id]=val; localStorage.setItem(OW_KEY,JSON.stringify(d)); syncToCloud(); }
+function getDefaultOwner(id, rowOwner){ return OW_DEFAULTS[id] || rowOwner || ''; }
 function owCls(o){
   if(!o) return 'b-pg';
   if(o==='Airoha') return 'b-air';
@@ -675,7 +678,7 @@ function owCls(o){
   return 'b-pg';
 }
 function owB(o, id){
-  const cur = id && getOwVal(id)!==null ? getOwVal(id) : (o||'');
+  const cur = id && getOwVal(id)!==null ? getOwVal(id) : getDefaultOwner(id, o);
   const label = cur || '–';
   const cls = owCls(cur);
   return `<button class="ow-btn" onclick="owDropdown(event,'${id}')" title="Change owner"><span class="bx ${cls}">${esc(label)}</span></button>`;
@@ -716,7 +719,8 @@ function owDropdown(e, id){
     ev.stopPropagation();
     saveOwVal(id,'');
     const tr=document.querySelector(`tr[data-id="${id}"]`);
-    const origOwner = D.find(r=>r[0]===id)?.[4]||'';
+    const rowOwner = D.find(r=>r[0]===id)?.[4]||'';
+    const origOwner = getDefaultOwner(id, rowOwner);
     if(tr){ const cell=tr.querySelector('.c-ow'); if(cell) cell.innerHTML=owB(origOwner,id); tr.dataset.owner=origOwner; }
     dd.remove(); activeOwDropdown=null;
   };
@@ -819,7 +823,8 @@ Object.entries(cats).forEach(([cat,rows])=>{
     // data row
     const tr=document.createElement('tr');
     tr.dataset.id=id; tr.dataset.pri=pri;
-    tr.dataset.owner=owner||''; tr.dataset.fn=(fn||'').toLowerCase(); tr.dataset.st=st;
+    const effectiveOwner = getOwVal(id)!==null ? getOwVal(id) : getDefaultOwner(id, owner);
+    tr.dataset.owner=effectiveOwner; tr.dataset.fn=(fn||'').toLowerCase(); tr.dataset.st=st;
     if(st==='done') tr.classList.add('r-done');
     if(st==='fail') tr.classList.add('r-fail');
     tr.innerHTML=`
