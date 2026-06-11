@@ -291,6 +291,7 @@ input.file-input{display:none;}
   <button class="btn-state-import" id="btn-state-import">📂 Import State</button>
   <input type="file" id="import-file-input" accept=".json" style="display:none">
   <button class="btn-rst" id="btn-rst">Reset Filters</button>
+  <button class="btn-rst" id="btn-clear-cat15-notes" title="Clear localStorage overrides for Cat 15 Test Notes so row data shows" style="border-color:#c4b5fd;color:#7c3aed">🔄 Reload Cat15 Notes</button>
 </div>
 <div id="import-toast" class="import-toast"></div>
 
@@ -1061,6 +1062,18 @@ document.getElementById('btn-rst').addEventListener('click',()=>{
   document.getElementById('f-search').value='';
   document.getElementById('f-ev').checked=false;
   applyFilters();
+});
+
+document.getElementById('btn-clear-cat15-notes').addEventListener('click',()=>{
+  const nt = JSON.parse(localStorage.getItem(NT_KEY)||'{}');
+  const rem = JSON.parse(localStorage.getItem(REM_KEY)||'{}');
+  // Remove all Cat 15 overrides from both Test Notes and Remarks
+  Object.keys(nt).filter(k=>k.startsWith('15.')).forEach(k=>delete nt[k]);
+  Object.keys(rem).filter(k=>k.startsWith('15.')).forEach(k=>delete rem[k]);
+  localStorage.setItem(NT_KEY, JSON.stringify(nt));
+  localStorage.setItem(REM_KEY, JSON.stringify(rem));
+  showToast('✅ Cat 15 Test Notes & Remarks localStorage cleared — reloading…');
+  setTimeout(()=>location.reload(), 1200);
 });
 
 // ── STATUS DROPDOWN ──
